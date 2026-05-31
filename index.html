@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Annuaire National des Médecins Conventionnés | médecins-conventionnés.fr</title>
+  <meta name="description" content="Trouvez gratuitement un médecin conventionné Secteur 1, 2 ou 3 en France. Filtrez par département et spécialité. Contrôlez vos frais médicaux grâce à notre annuaire national complet."/>
+  <meta name="keywords" content="médecin conventionné, secteur 1, secteur 2, dépassement honoraires, annuaire médecin France, remboursement sécurité sociale, trouver médecin"/>
+  <link rel="canonical" href="https://www.médecins-conventionnés.fr/"/>
+  <meta property="og:title" content="Annuaire National des Médecins Conventionnés"/>
+  <meta property="og:description" content="Trouvez un professionnel de santé et contrôlez vos frais médicaux."/>
+  <meta property="og:type" content="website"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Annuaire National des Médecins Conventionnés","url":"https://www.médecins-conventionnés.fr","description":"Annuaire gratuit des médecins conventionnés en France"}</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:       #eef4fb;
+      --white:    #ffffff;
+      --blue-hero:#1a56db;
+      --blue-dark:#1139a0;
+      --blue-mid: #dbeafe;
+      --border:   #d1dff5;
+      --border-d: #b3c8ed;
+      --text:     #000000;
+      --muted:    #374151;
+      --light:    #6b7280;
+      --accent:   #000000;
+      --acc-h:    #1a1d23;
+      --tag-bg:   #dbeafe;
+      --tag-c:    #1139a0;
+      --sh-xs:    0 1px 4px rgba(26,86,219,.07);
+      --sh-sm:    0 2px 10px rgba(26,86,219,.09);
+      --sh-md:    0 6px 22px rgba(26,86,219,.13);
+      --r:        10px;
+      --r-sm:     6px;
+    }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+    html { scroll-behavior:smooth }
+    body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6 }
+
+    /* ── AD PLACEHOLDERS ── */
+    .ad {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      border:1px dashed var(--border-d); border-radius:var(--r-sm);
+      background:var(--white); color:var(--light); gap:3px;
+    }
+    .ad-lbl { font-size:.68rem; text-transform:uppercase; letter-spacing:.09em }
+    .ad-sz  { font-size:.62rem }
+    .ad-banner { width:100%; height:90px; margin:14px 0 }
+    .ad-sq     { width:100%; min-height:250px }
+
+    /* ── HEADER ── */
+    header { background:var(--white); border-bottom:2px solid var(--blue-mid); padding:0 24px }
+    .hdr { max-width:1080px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:15px 0; gap:16px }
+    .logo { font-size:.95rem; font-weight:900; color:#000; letter-spacing:-.2px; white-space:nowrap }
+    .logo em { font-style:normal; font-weight:900; color:#000 }
+    .nav { display:flex; gap:20px; list-style:none }
+    .nav a { font-size:.85rem; color:var(--muted); text-decoration:none; transition:color .15s }
+    .nav a:hover { color:var(--accent) }
+
+    /* ── HERO ── */
+    .hero { background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-hero) 100%); padding:50px 24px 42px; text-align:center }
+    .hero-in { max-width:700px; margin:0 auto }
+    .hero h1 { font-size:clamp(1.45rem,3.8vw,2.1rem); font-weight:800; color:#fff; line-height:1.25; margin-bottom:9px }
+    .hero p   { font-size:.975rem; color:rgba(255,255,255,.82); margin-bottom:32px }
+
+    /* ── FILTERS ── */
+    .filters-box {
+      display:flex; flex-direction:column; gap:14px;
+      background:var(--white); border:2px solid var(--border); border-radius:var(--r);
+      padding:22px 24px; box-shadow:var(--sh-sm); max-width:700px; margin:0 auto;
+    }
+    .selects-row { display:grid; grid-template-columns:1fr 1fr; gap:12px }
+    @media(max-width:520px){ .selects-row { grid-template-columns:1fr } }
+    .sel-group { display:flex; flex-direction:column; gap:5px }
+    .sel-group label { font-size:.75rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em }
+    .sel-group select {
+      border:1.5px solid var(--border-d); border-radius:var(--r-sm);
+      padding:11px 14px; font-size:.925rem; color:var(--text); background:var(--white);
+      cursor:pointer; outline:none; transition:border-color .18s; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 12px center;
+      padding-right:34px;
+    }
+    .sel-group select:focus { border-color:var(--accent) }
+
+    /* ── SECTOR BUTTONS ── */
+    .sector-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center }
+    .sec-btn {
+      padding:7px 18px; border:1.5px solid var(--border-d); border-radius:50px;
+      background:var(--white); color:var(--muted); font-size:.85rem; cursor:pointer;
+      transition:all .18s; white-space:nowrap;
+    }
+    .sec-btn:hover { border-color:var(--accent); color:var(--accent) }
+    .sec-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600 }
+
+    /* ── STATS BAR ── */
+    .stats-bar { background:var(--blue-mid); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:13px 24px }
+    .stats-in  { max-width:1080px; margin:0 auto; display:flex; justify-content:center; gap:44px; flex-wrap:wrap }
+    .stat strong { display:block; font-size:1.3rem; font-weight:800; color:#000 }
+    .stat span   { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em }
+
+    /* ── AD TOP ── */
+    .ad-top { max-width:1080px; margin:0 auto; padding:0 24px }
+
+    /* ── LAYOUT ── */
+    .layout {
+      max-width:1080px; margin:24px auto 52px; padding:0 24px;
+      display:grid; grid-template-columns:1fr 272px; gap:24px; align-items:start;
+    }
+    @media(max-width:840px){ .layout { grid-template-columns:1fr } }
+
+    /* ── RESULTS HEAD ── */
+    .res-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px; flex-wrap:wrap }
+    .res-count { font-size:.875rem; color:var(--muted) }
+    .res-count strong { color:var(--text) }
+    .sort-sel {
+      border:1.5px solid var(--border); border-radius:var(--r-sm);
+      padding:6px 30px 6px 10px; font-size:.8rem; color:var(--text); background:var(--white);
+      cursor:pointer; outline:none; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 9px center;
+    }
+
+    /* ── CARDS ── */
+    .cards { display:flex; flex-direction:column; gap:10px }
+    .card {
+      background:var(--white); border:1.5px solid var(--border); border-radius:var(--r);
+      padding:18px 20px; box-shadow:var(--sh-xs); transition:box-shadow .18s, border-color .18s;
+    }
+    .card:hover { box-shadow:var(--sh-md); border-color:var(--border-d) }
+    .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:4px }
+    .card-name { font-size:.97rem; font-weight:700; color:var(--accent); line-height:1.3 }
+    .card-tag  { font-size:.7rem; padding:2px 9px; border-radius:20px; background:var(--tag-bg); color:var(--tag-c); white-space:nowrap; font-weight:600; flex-shrink:0 }
+    .card-spec { font-size:.82rem; color:var(--muted); margin-bottom:11px }
+    .card-meta { display:grid; grid-template-columns:1fr 1fr; gap:5px 18px }
+    @media(max-width:480px){ .card-meta { grid-template-columns:1fr } }
+    .mi { display:flex; align-items:flex-start; gap:6px; font-size:.82rem; color:var(--muted) }
+    .mi svg { flex-shrink:0; margin-top:2px; color:var(--light) }
+    .card-foot {
+      margin-top:12px; padding-top:12px; border-top:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    }
+    .sect-lbl { font-size:.78rem; color:var(--muted) }
+    .sect-lbl strong { color:var(--text) }
+    .btn-tel {
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--accent); color:#fff; border-radius:var(--r-sm);
+      padding:8px 16px; font-size:.82rem; font-weight:600; text-decoration:none; transition:background .18s;
+    }
+    .btn-tel:hover { background:var(--acc-h) }
+    .no-tel { font-size:.76rem; color:var(--light) }
+
+    /* inline ad */
+    .ad-inline { padding:4px 0 }
+
+    /* ── PAGINATION ── */
+    .pagination { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:24px; flex-wrap:wrap }
+    .pg {
+      min-width:36px; height:36px; padding:0 10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border:1.5px solid var(--border); border-radius:var(--r-sm);
+      background:var(--white); color:var(--text); font-size:.85rem; cursor:pointer; transition:all .18s;
+    }
+    .pg:hover:not(:disabled) { border-color:var(--accent); color:var(--accent) }
+    .pg.active  { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700 }
+    .pg:disabled { opacity:.35; cursor:not-allowed }
+    .pg-dots { color:var(--light); font-size:.85rem; padding:0 3px }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display:flex; flex-direction:column; gap:20px; position:sticky; top:20px }
+    .sb-card { background:var(--white); border:1.5px solid var(--border); border-radius:var(--r); padding:20px; box-shadow:var(--sh-xs) }
+    .sb-card h3 { font-size:.86rem; font-weight:700; color:var(--accent); margin-bottom:12px }
+    .sb-list { list-style:none; display:flex; flex-direction:column; gap:7px }
+    .sb-list li { font-size:.81rem; color:var(--muted); display:flex; gap:6px; align-items:flex-start }
+    .sb-list li::before { content:"—"; color:var(--light); flex-shrink:0 }
+    .sb-list a { color:var(--accent); text-decoration:underline }
+
+    /* ── STATE / LOADING ── */
+    .state { text-align:center; padding:56px 20px }
+    .spin { width:38px; height:38px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 16px }
+    @keyframes spin { to { transform:rotate(360deg) } }
+    .state-ico { font-size:2.4rem; margin-bottom:12px }
+    .state h3  { font-size:1.05rem; color:var(--text); margin-bottom:5px }
+    .state p   { font-size:.875rem; color:var(--muted) }
+
+    /* ── FAQ ── */
+    .faq-sec { background:var(--white); border-top:1px solid var(--border); padding:58px 24px }
+    .faq-in  { max-width:800px; margin:0 auto }
+    .faq-in h2 { font-size:clamp(1.15rem,2.8vw,1.55rem); font-weight:800; color:var(--accent); text-align:center; margin-bottom:6px }
+    .faq-sub   { text-align:center; color:var(--muted); font-size:.88rem; margin-bottom:34px }
+    .faq-item  { border:1.5px solid var(--border); border-radius:var(--r); margin-bottom:8px; overflow:hidden }
+    .faq-q {
+      width:100%; background:none; border:none; text-align:left;
+      padding:15px 18px; font-size:.93rem; font-weight:600; color:var(--text);
+      cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      transition:background .18s;
+    }
+    .faq-q:hover, .faq-q[aria-expanded="true"] { background:var(--bg) }
+    .chev { transition:transform .28s; flex-shrink:0; color:var(--muted) }
+    .faq-q[aria-expanded="true"] .chev { transform:rotate(180deg) }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height .32s ease }
+    .faq-a.open { max-height:700px }
+    .faq-a-in { padding:0 18px 16px; font-size:.875rem; color:var(--muted); line-height:1.78 }
+    .faq-a-in strong { color:var(--text) }
+    .faq-a-in ul { margin:8px 0 8px 18px }
+    .faq-a-in ul li { margin-bottom:4px }
+    .faq-a-in p + p { margin-top:8px }
+
+    /* ── FOOTER ── */
+    footer { background:var(--accent); color:rgba(255,255,255,.6); padding:26px 24px; text-align:center; font-size:.8rem }
+    footer strong { color:#fff }
+    footer a { color:rgba(255,255,255,.6); text-decoration:underline }
+    footer p + p { margin-top:5px }
+
+    @media(max-width:580px){
+      .nav { display:none }
+      .hero { padding:36px 16px 30px }
+      .filters-box { padding:16px }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header>
+  <div class="hdr">
+    <div class="logo">médecins<em>-conventionnés</em>.fr</div>
+    <ul class="nav">
+      <li><a href="#annuaire">Annuaire</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="https://www.ameli.fr" target="_blank" rel="noopener">Ameli.fr ↗</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ════════ HERO + FILTRES ════════ -->
+<section class="hero" id="annuaire">
+  <div class="hero-in">
+    <h1>Annuaire National des Médecins Conventionnés</h1>
+    <p>Trouvez un professionnel de santé et contrôlez vos frais médicaux</p>
+
+    <div class="filters-box" role="search" aria-label="Filtres de recherche">
+
+      <!-- Dropdowns département + spécialité -->
+      <div class="selects-row">
+        <div class="sel-group">
+          <label for="selDept">📍 Département</label>
+          <select id="selDept" onchange="applyFilters()" aria-label="Filtrer par département">
+            <option value="">Tous les départements</option>
+          </select>
+        </div>
+        <div class="sel-group">
+          <label for="selSpec">🩺 Spécialité</label>
+          <select id="selSpec" onchange="applyFilters()" aria-label="Filtrer par spécialité">
+            <option value="">Toutes les spécialités</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Sector buttons -->
+      <div class="sector-row" role="group" aria-label="Filtrer par secteur">
+        <button class="sec-btn active" data-sec="all" onclick="setSector(this)">Tous secteurs</button>
+        <button class="sec-btn"        data-sec="s1"  onclick="setSector(this)">Secteur 1</button>
+        <button class="sec-btn"        data-sec="s2"  onclick="setSector(this)">Secteur 2</button>
+        <button class="sec-btn"        data-sec="s3"  onclick="setSector(this)">Secteur 3</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ════════ STATS ════════ -->
+<div class="stats-bar">
+  <div class="stats-in">
+    <div class="stat"><strong id="sTot">—</strong><span>médecins référencés</span></div>
+    <div class="stat"><strong id="sDep">—</strong><span>départements</span></div>
+    <div class="stat"><strong id="sSp">—</strong><span>spécialités</span></div>
+  </div>
+</div>
+
+<!-- ════════ AD BANNER TOP ════════ -->
+<div class="ad-top">
+  <div class="ad ad-banner" aria-label="Emplacement publicitaire">
+    <div class="ad-lbl">Publicité</div>
+    <div class="ad-sz">728 × 90 — Google AdSense</div>
+  </div>
+</div>
+
+<!-- ════════ MAIN LAYOUT ════════ -->
+<main class="layout">
+
+  <!-- Results -->
+  <section aria-label="Résultats">
+    <div class="res-head">
+      <p class="res-count" id="resCount">Chargement…</p>
+      <select class="sort-sel" id="sortSel" onchange="applyFilters()" aria-label="Trier les résultats">
+        <option value="nom">Trier : Nom A–Z</option>
+        <option value="spec">Trier : Spécialité</option>
+        <option value="dept">Trier : Département</option>
+        <option value="secteur">Trier : Secteur</option>
+      </select>
+    </div>
+    <div id="cardsWrap"></div>
+    <nav id="paginWrap" aria-label="Pagination"></nav>
+  </section>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Informations complémentaires">
+
+    <div class="ad ad-sq" aria-label="Emplacement publicitaire">
+      <div class="ad-lbl">Publicité</div>
+      <div class="ad-sz">300 × 250 — Google AdSense</div>
+    </div>
+
+    <div class="sb-card">
+      <h3>Liens officiels</h3>
+      <ul class="sb-list">
+        <li><a href="https://www.ameli.fr" target="_blank" rel="noopener">Ameli.fr</a></li>
+
+        <li><a href="https://annuaire.esante.gouv.fr/" target="_blank" rel="noopener">Annuaire eSanté</a></li>
+        <li><a href="https://www.service-public.fr" target="_blank" rel="noopener">Service-Public.fr</a></li>
+      </ul>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- ════════ FAQ ════════ -->
+<section class="faq-sec" id="faq" aria-label="Foire aux questions">
+  <div class="faq-in">
+    <h2>Foire aux questions</h2>
+    <p class="faq-sub">Comprendre les secteurs de conventionnement et optimiser vos remboursements</p>
+
+    <!-- Q1 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Qu'est-ce qu'un médecin conventionné de Secteur 1 ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <p>Un médecin conventionné de <strong>Secteur 1</strong> a signé une convention avec l'Assurance Maladie et s'engage à respecter les <strong>tarifs officiels fixés par la Sécurité Sociale</strong> (tarifs opposables). Il ne peut facturer aucun dépassement.</p>
+        <p>Exemple : une consultation de médecin généraliste coûte 30 €. La Sécu rembourse 70 % (21 €) et votre mutuelle prend en charge le ticket modérateur (9 €). En cas d'ALD, maternité ou accident du travail, le remboursement atteint 100 %.</p>
+      </div></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Quelle est la différence entre le Secteur 1, le Secteur 2 et le Secteur 3 ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <ul>
+          <li><strong>Secteur 1 :</strong> Tarifs opposables, aucun dépassement, remboursement maximal.</li>
+          <li><strong>Secteur 2 :</strong> Honoraires libres "avec tact et mesure". La Sécu rembourse sur la base du tarif S1 uniquement ; le surplus est à votre charge ou couvert partiellement par votre mutuelle.</li>
+          <li><strong>Secteur 3 (non conventionné) :</strong> Aucune convention avec la Sécu. Tarifs totalement libres. Remboursement symbolique (environ 1 €). Très marginal en France.</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Comment savoir si un médecin applique des dépassements d'honoraires ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <ul>
+          <li>Consultez <strong>notre annuaire</strong> : chaque fiche indique le secteur du praticien.</li>
+          <li>Sur <strong>Ameli.fr</strong>, la recherche de médecin affiche le secteur de conventionnement.</li>
+          <li>Sur <strong><a href="https://annuaire.esante.gouv.fr/" target="_blank" rel="noopener">l'Annuaire eSanté (annuaire.esante.gouv.fr)</a></strong>, chaque fiche précise le secteur.</li>
+          <li>Le médecin est tenu légalement d'afficher ses tarifs en salle d'attente et de vous informer avant toute consultation si un dépassement est prévu.</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Qu'est-ce que l'Option de Pratique Tarifaire Maîtrisée (OPTAM) ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <p>L'<strong>OPTAM</strong> (anciennement Contrat d'Accès aux Soins) est un dispositif optionnel pour les médecins de Secteur 2. En y adhérant, le médecin s'engage à limiter ses dépassements et à pratiquer une part significative de ses actes au tarif opposable.</p>
+        <p>En contrepartie, ses patients bénéficient d'un meilleur remboursement par la Sécu et les mutuelles responsables doivent couvrir les dépassements OPTAM. C'est un compromis plus favorable qu'un Secteur 2 classique, mais le Secteur 1 reste la solution la plus avantageuse.</p>
+      </div></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Quel est le taux de remboursement par la Sécurité Sociale pour un médecin conventionné ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <ul>
+          <li><strong>70 % du tarif de base</strong> pour une consultation classique (soit 21 € sur 30 € chez un généraliste). Les 30 % restants (ticket modérateur) sont généralement couverts par la mutuelle.</li>
+          <li><strong>100 % du tarif de base</strong> pour les patients en ALD, les femmes enceintes (à partir du 6e mois), les victimes d'accidents du travail et les bénéficiaires de la Complémentaire Santé Solidaire.</li>
+        </ul>
+        <p>⚠️ Consulter un spécialiste sans passer par votre médecin traitant (hors urgences, gynéco, ophtalmo, dentiste, psychiatre) réduit le remboursement à 30 %, même chez un Secteur 1.</p>
+      </div></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="faq-item" itemscope itemtype="https://schema.org/Question">
+      <button class="faq-q" aria-expanded="false" onclick="tfaq(this)" itemprop="name">
+        Pourquoi choisir un médecin non conventionné (Secteur 3) ?
+        <svg class="chev" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" itemscope itemtype="https://schema.org/Answer"><div class="faq-a-in" itemprop="text">
+        <p>Le recours à un médecin de <strong>Secteur 3</strong> est très marginal en France (moins de 1 % des praticiens). Il peut se justifier dans des cas précis :</p>
+        <ul>
+          <li>Expertise très pointue ou renommée spécifique, non disponible dans les secteurs conventionnés.</li>
+          <li>Pratiques alternatives ou approches thérapeutiques particulières.</li>
+          <li>Absence d'autre praticien disponible dans la spécialité localement.</li>
+        </ul>
+        <p>⚠️ Le remboursement par la Sécu est quasi nul (environ 1 €) et la plupart des mutuelles couvrent peu ou pas les actes en Secteur 3, entraînant un <strong>reste à charge important</strong>.</p>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <p><strong>médecins-conventionnés.fr</strong> — Annuaire national gratuit des médecins conventionnés</p>
+  <p>Outil d'information indépendant. Sources officielles : <a href="https://www.ameli.fr" target="_blank" rel="noopener">Ameli.fr</a> · <a href="https://annuaire.esante.gouv.fr/" target="_blank" rel="noopener">Annuaire eSanté</a></p>
+  <p style="margin-top:5px;opacity:.45">© 2024 médecins-conventionnés.fr — Mentions légales — Politique de confidentialité</p>
+</footer>
+
+<!-- ════════ JAVASCRIPT ════════ -->
+<script>
+/* ═══ CONFIG ═══ */
+const PG = 20;
+
+/* ═══ STATE ═══ */
+let all      = [];
+let filtered = [];
+let page     = 1;
+let sector   = 'all';
+
+/* ═══ DEMO DATA (replaced automatically when medecins.csv is present) ═══ */
+const DEMO = [
+  {nom:"Dr MARTIN Sophie",     spec:"Médecine générale",  dept:"75",adresse:"12 rue de Rivoli, Paris",            tel:"01 42 36 78 90", raw:"Secteur 1"},
+  {nom:"Dr DUBOIS Pierre",      spec:"Cardiologie",         dept:"69",adresse:"5 avenue de la Paix, Lyon",          tel:"04 72 41 22 10", raw:"Secteur 1"},
+  {nom:"Dr LECLERC Marie",      spec:"Pédiatrie",           dept:"13",adresse:"8 boulevard Baille, Marseille",      tel:"04 91 78 34 56", raw:"Secteur 2 OPTAM"},
+  {nom:"Dr BERNARD Jean",       spec:"Dermatologie",        dept:"31",adresse:"22 allée Jean Jaurès, Toulouse",     tel:"05 61 23 44 55", raw:"Secteur 2"},
+  {nom:"Dr FONTAINE Camille",   spec:"Ophtalmologie",       dept:"33",adresse:"3 cours Portal, Bordeaux",           tel:"05 56 81 90 12", raw:"Secteur 1"},
+  {nom:"Dr GARNIER Nicolas",    spec:"Médecine générale",   dept:"44",adresse:"17 place Graslin, Nantes",           tel:"02 40 35 67 80", raw:"Secteur 1"},
+  {nom:"Dr MOREL Isabelle",     spec:"Gynécologie",         dept:"67",adresse:"6 rue du Dôme, Strasbourg",          tel:"03 88 32 11 23", raw:"non conventionné"},
+  {nom:"Dr PETIT François",     spec:"ORL",                 dept:"59",adresse:"40 rue Nationale, Lille",            tel:"03 20 57 88 99", raw:"Secteur 2"},
+  {nom:"Dr SIMON Élodie",       spec:"Rhumatologie",        dept:"06",adresse:"10 avenue Jean Médecin, Nice",       tel:"04 93 16 45 67", raw:"Secteur 1"},
+  {nom:"Dr RENARD Alain",       spec:"Gastro-entérologie",  dept:"34",adresse:"2 place de la Comédie, Montpellier", tel:"04 67 92 33 14", raw:"Secteur 1"},
+  {nom:"Dr MERCIER Lucie",      spec:"Médecine générale",   dept:"75",adresse:"55 rue du Fbg Saint-Antoine, Paris", tel:"01 43 71 25 36", raw:"Secteur 1"},
+  {nom:"Dr LEROY Thomas",       spec:"Neurologie",          dept:"69",adresse:"18 rue Garibaldi, Lyon",             tel:"04 72 60 11 22", raw:"Secteur 2 OPTAM"},
+  {nom:"Dr GIRARD Amélie",      spec:"Endocrinologie",      dept:"31",adresse:"50 avenue des Minimes, Toulouse",    tel:"05 62 73 44 11", raw:"Secteur 1"},
+  {nom:"Dr MULLER Bruno",       spec:"Urologie",            dept:"67",adresse:"22 rue de la Mésange, Strasbourg",   tel:"03 88 37 22 44", raw:"Secteur 2"},
+  {nom:"Dr BONNET Claire",      spec:"Psychiatrie",         dept:"33",adresse:"9 rue Judaïque, Bordeaux",           tel:"05 57 81 44 55", raw:"Secteur 3"},
+  {nom:"Dr LAMBERT Marc",       spec:"Médecine générale",   dept:"44",adresse:"88 rue de la Marne, Nantes",         tel:"02 51 83 66 77", raw:"Secteur 1"},
+  {nom:"Dr PERRIN Valérie",     spec:"Cardiologie",         dept:"13",adresse:"33 boulevard Périer, Marseille",     tel:"04 91 25 37 48", raw:"Secteur 1"},
+  {nom:"Dr COLIN Sébastien",    spec:"Pédiatrie",           dept:"59",adresse:"14 rue de Béthune, Lille",           tel:"03 20 12 99 88", raw:"Secteur 2"},
+  {nom:"Dr CHEVALIER Nathalie", spec:"Médecine générale",   dept:"06",adresse:"7 promenade des Anglais, Nice",      tel:"04 93 87 56 34", raw:"Secteur 1"},
+  {nom:"Dr ROBIN Patrick",      spec:"Dermatologie",        dept:"34",adresse:"28 avenue du Peyrou, Montpellier",   tel:"04 67 58 12 30", raw:"Secteur 3"},
+];
+
+/* ═══ NORMALIZE SECTOR ═══ */
+function normSec(raw) {
+  const s = String(raw||'').toLowerCase().trim();
+  if (s.includes('non conv') || s.includes('3')) return 's3';
+  if (s.includes('2') || s.includes('optam'))    return 's2';
+  if (s.includes('1'))                            return 's1';
+  return 's1';
+}
+
+/* ═══ DEPT LABEL from code postal ═══ */
+function deptLabel(cp) {
+  const code = String(cp||'').trim();
+  const num  = code.slice(0,2);
+  // Handle Corsica & DOM
+  if (code.startsWith('20')) return '20 – Corse';
+  if (code.startsWith('97')) return code.slice(0,3) + ' – Outre-Mer';
+  return num;
+}
+
+/* ═══ LOAD CSV ═══ */
+async function loadData() {
+  loading();
+  let data = null;
+  try {
+    const res = await fetch('medecins.csv');
+    if (res.ok) {
+      const txt = await res.text();
+      const p = Papa.parse(txt, { header:true, skipEmptyLines:true, trimHeaders:true });
+      data = p.data.map(d => {
+        const nom    = String(d['nom']    ||'').trim();
+        const prenom = String(d['prenom'] ||'').trim();
+        const cp     = String(d['coordonnees_code_postal']||'').trim();
+        const voie   = String(d['coordonnees_voie']       ||'').trim();
+        const ville  = String(d['coordonnees_ville']      ||'').trim();
+        return {
+          nom:     `Dr ${nom} ${prenom}`.trim(),
+          spec:    String(d['specialite']          ||'').trim(),
+          dept:    deptLabel(cp),
+          adresse: [voie, ville].filter(Boolean).join(', '),
+          tel:     String(d['coordonnees_num_tel'] ||'').trim(),
+          raw:     String(d['secteur']             ||'Secteur 1').trim(),
+        };
+      }).filter(d => d.nom && d.nom !== 'Dr');
+    }
+  } catch(_) {}
+  init(data || DEMO);
+}
+
+/* ═══ INIT ═══ */
+function init(data) {
+  all = data.map(d => ({ ...d, sk: normSec(d.raw) }));
+
+  // Global stats (full dataset)
+  document.getElementById('sTot').textContent = all.length.toLocaleString('fr-FR');
+  const depts = [...new Set(all.map(d=>d.dept).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
+  const specs  = [...new Set(all.map(d=>d.spec).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
+  document.getElementById('sDep').textContent = depts.length;
+  document.getElementById('sSp').textContent  = specs.length;
+
+  // Populate selects
+  fill('selDept', depts);
+  fill('selSpec', specs);
+
+  applyFilters();
+}
+
+function fill(id, values) {
+  const sel = document.getElementById(id);
+  values.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
+
+/* ═══ SECTOR TOGGLE ═══ */
+function setSector(btn) {
+  document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sector = btn.dataset.sec;
+  page = 1;
+  applyFilters();
+}
+
+/* ═══ FILTER + SORT ═══ */
+function applyFilters() {
+  const dept = document.getElementById('selDept').value;
+  const spec  = document.getElementById('selSpec').value;
+  const sort  = document.getElementById('sortSel').value;
+
+  filtered = all.filter(d => {
+    let ok = true;
+    if (sector === 's1') ok = d.sk === 's1';
+    else if (sector === 's2') ok = d.sk === 's2';
+    else if (sector === 's3') ok = d.sk === 's3';
+    if (!ok) return false;
+    if (dept && d.dept !== dept) return false;
+    if (spec  && d.spec  !== spec)  return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    if (sort==='spec')    return a.spec.localeCompare(b.spec,'fr');
+    if (sort==='dept')    return a.dept.localeCompare(b.dept,'fr');
+    if (sort==='secteur') return a.raw.localeCompare(b.raw,'fr');
+    return a.nom.localeCompare(b.nom,'fr');
+  });
+
+  page = 1;
+  render();
+}
+
+/* ═══ RENDER ═══ */
+/* SVG icons */
+const iPin  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 4.9-7 13-7 13S5 13.9 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>`;
+const iGrid = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`;
+const iPhone = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 4.42 4.16 2 2 0 0 1 6.4 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L10.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
+
+function render() {
+  const tot   = filtered.length;
+  const start = (page-1)*PG;
+  const slice = filtered.slice(start, start+PG);
+
+  document.getElementById('resCount').innerHTML =
+    `<strong>${tot.toLocaleString('fr-FR')}</strong> médecin${tot!==1?'s':''} trouvé${tot!==1?'s':''}`;
+
+  const wrap = document.getElementById('cardsWrap');
+
+  if (!tot) {
+    wrap.innerHTML = `<div class="state"><div class="state-ico">🔍</div><h3>Aucun résultat</h3><p>Modifiez les filtres pour élargir la recherche.</p></div>`;
+    document.getElementById('paginWrap').innerHTML = '';
+    return;
+  }
+
+  let h = '<div class="cards">';
+  slice.forEach((d, i) => {
+    if (i === 9) {
+      h += `</div><div class="ad-inline"><div class="ad ad-banner" aria-label="Publicité"><div class="ad-lbl">Publicité</div><div class="ad-sz">728 × 90 — Google AdSense</div></div></div><div class="cards">`;
+    }
+    const telHtml = d.tel
+      ? `<a class="btn-tel" href="tel:${d.tel.replace(/[\s.]/g,'')}">${iPhone} ${x(d.tel)}</a>`
+      : `<span class="no-tel">Tél. non renseigné</span>`;
+    h += `
+    <article class="card" itemscope itemtype="https://schema.org/Physician">
+      <div class="card-top">
+        <div class="card-name" itemprop="name">${x(d.nom)}</div>
+        <span class="card-tag">${x(d.raw)}</span>
+      </div>
+      <div class="card-spec" itemprop="medicalSpecialty">${x(d.spec)||'Spécialité non précisée'}</div>
+      <div class="card-meta">
+        <div class="mi">${iPin}<span itemprop="address">${x(d.adresse)||'Adresse non précisée'}</span></div>
+        <div class="mi">${iGrid}<span>${x(d.dept)||'—'}</span></div>
+      </div>
+      <div class="card-foot">
+        <span class="sect-lbl">Conventionnement : <strong>${x(d.raw)}</strong></span>
+        ${telHtml}
+      </div>
+    </article>`;
+  });
+  h += '</div>';
+  wrap.innerHTML = h;
+
+  renderPagin(tot);
+  document.getElementById('annuaire').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ PAGINATION ═══ */
+function renderPagin(tot) {
+  const tp = Math.ceil(tot/PG);
+  const el = document.getElementById('paginWrap');
+  if (tp<=1) { el.innerHTML=''; return; }
+  let h = '<div class="pagination">';
+  h += `<button class="pg" onclick="gp(${page-1})" ${page===1?'disabled':''}>← Précédent</button>`;
+  range(page,tp).forEach(n => {
+    if (n==='…') h += `<span class="pg-dots">…</span>`;
+    else h += `<button class="pg${n===page?' active':''}" onclick="gp(${n})">${n}</button>`;
+  });
+  h += `<button class="pg" onclick="gp(${page+1})" ${page===tp?'disabled':''}>Suivant →</button>`;
+  h += '</div>';
+  el.innerHTML = h;
+}
+function range(c,t) {
+  if (t<=7) return Array.from({length:t},(_,i)=>i+1);
+  if (c<=4) return [1,2,3,4,5,'…',t];
+  if (c>=t-3) return [1,'…',t-4,t-3,t-2,t-1,t];
+  return [1,'…',c-1,c,c+1,'…',t];
+}
+function gp(n) {
+  const mx = Math.ceil(filtered.length/PG);
+  if (n<1||n>mx) return;
+  page=n; render();
+}
+
+/* ═══ FAQ ═══ */
+function tfaq(btn) {
+  const open = btn.getAttribute('aria-expanded')==='true';
+  document.querySelectorAll('.faq-q').forEach(b => {
+    b.setAttribute('aria-expanded','false');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!open) { btn.setAttribute('aria-expanded','true'); btn.nextElementSibling.classList.add('open'); }
+}
+
+/* ═══ HELPERS ═══ */
+function x(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function loading() {
+  document.getElementById('cardsWrap').innerHTML =
+    `<div class="state"><div class="spin"></div><h3>Chargement de l'annuaire…</h3><p>Lecture du fichier medecins.csv en cours.</p></div>`;
+  document.getElementById('resCount').textContent = 'Chargement…';
+}
+
+/* ═══ BOOT ═══ */
+loadData();
+</script>
+</body>
+</html>
