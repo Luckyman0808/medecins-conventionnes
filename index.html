@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Annuaire National des Médecins Conventionnés | médecins-conventionnés.fr</title>
+  <title>Annuaire National des Médecins Conventionnés | medecins-conventionnes.fr</title>
   <meta name="description" content="Trouvez gratuitement un médecin conventionné Secteur 1, 2 ou 3 en France. Filtrez par code postal et spécialité."/>
   <meta name="keywords" content="médecin conventionné, secteur 1, secteur 2, dépassement honoraires, annuaire médecin France"/>
-  <link rel="canonical" href="https://www.médecins-conventionnés.fr/"/>
+  <link rel="canonical" href="https://www.medecins-conventionnes.fr/"/>
   <meta property="og:title" content="Annuaire National des Médecins Conventionnés"/>
   <meta property="og:description" content="Trouvez un professionnel de santé et contrôlez vos frais médicaux."/>
   <meta property="og:type" content="website"/>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Annuaire National des Médecins Conventionnés","url":"https://www.médecins-conventionnés.fr"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Annuaire National des Médecins Conventionnés","url":"https://www.medecins-conventionnes.fr"}</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5004703594882989" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
@@ -203,7 +204,7 @@
 <!-- ════ HEADER ════ -->
 <header>
   <div class="hdr">
-    <div class="logo">médecins-conventionnés.fr</div>
+    <div class="logo">Médecins conventionnés</div>
     <ul class="nav">
       <li><a href="#annuaire">Annuaire</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -274,7 +275,7 @@
       <h3>Les 3 secteurs</h3>
       <ul class="sect-list">
         <li><span class="sect-name">Secteur 1</span> Tarifs fixés par l'Assurance Maladie (sans dépassement d'honoraires).</li>
-        <li><span class="sect-name">Secteur 2</span> Honoraires libres.</li>
+        <li><span class="sect-name">Secteur 2</span> Honoraires libres (dépassements autorisés avec tact et mesure).</li>
         <li><span class="sect-name">Secteur 3</span> Professionnel non conventionné (tarifs totalement libres).</li>
       </ul>
     </div>
@@ -354,7 +355,7 @@
 
 <!-- ════ FOOTER ════ -->
 <footer class="site-footer">
-  <p>© 2026 médecins-conventionnés.fr — <a href="mentions-legales.html">Mentions légales</a> — <a href="confidentialite.html">Politique de confidentialité</a></p>
+  <p>© 2026 medecins-conventionnes.fr — <a href="mentions-legales.html">Mentions légales</a> — <a href="confidentialite.html">Politique de confidentialité</a></p>
   <p style="margin-top:10px;opacity:.55;font-size:.72rem;max-width:820px;margin-left:auto;margin-right:auto;line-height:1.6">
     Avertissement : Ce site est un outil d'aide à la recherche basé sur les données ouvertes de l'Assurance Maladie (data.gouv.fr). Ce site n'évalue, ne note et ne classe pas les professionnels de santé. Les liens « Avis / Itinéraire » redirigent l'utilisateur vers le moteur de recherche tiers Google Maps ; l'éditeur du site décline toute responsabilité quant aux contenus, avis ou notations présents sur cette plateforme externe.
   </p>
@@ -427,7 +428,7 @@ function loadData() {
   showLoading();
   let rows = [];
 
-  Papa.parse('medecins.csv', {
+  Papa.parse('./medecins.csv', {
     download     : true,
     header       : true,
     skipEmptyLines: true,
