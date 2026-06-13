@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Annuaire National des Médecins Conventionnés | medecins-conventionnes.fr</title>
+  <title>Liste des Médecins Conventionnés | médecins-conventionnés.fr</title>
   <meta name="description" content="Trouvez gratuitement un médecin conventionné Secteur 1, 2 ou 3 en France. Filtrez par code postal et spécialité."/>
   <meta name="keywords" content="médecin conventionné, secteur 1, secteur 2, dépassement honoraires, annuaire médecin France"/>
-  <link rel="canonical" href="https://www.medecins-conventionnes.fr/"/>
-  <meta property="og:title" content="Annuaire National des Médecins Conventionnés"/>
+  <link rel="canonical" href="https://www.médecins-conventionnés.fr/"/>
+  <meta property="og:title" content="Liste des Médecins Conventionnés"/>
   <meta property="og:description" content="Trouvez un professionnel de santé et contrôlez vos frais médicaux."/>
   <meta property="og:type" content="website"/>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Annuaire National des Médecins Conventionnés","url":"https://www.medecins-conventionnes.fr"}</script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5004703594882989" crossorigin="anonymous"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Liste des Médecins Conventionnés","url":"https://www.médecins-conventionnés.fr"}</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
@@ -28,7 +27,6 @@
     html{scroll-behavior:smooth}
     body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px}
 
-    /* ── HEADER ── */
     header{background:var(--white);border-bottom:2px solid var(--blue-mid);padding:0 20px}
     .hdr{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:16px}
     .logo{font-size:.95rem;font-weight:900;color:#000;letter-spacing:-.2px;white-space:nowrap}
@@ -36,74 +34,46 @@
     .nav a{font-size:.84rem;color:var(--muted);text-decoration:none;transition:color .15s}
     .nav a:hover{color:#000}
 
-    /* ── HERO ── */
     .hero{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-hero) 100%);padding:42px 20px 36px;text-align:center}
     .hero-in{max-width:720px;margin:0 auto}
     .hero h1{font-size:clamp(1.3rem,3.5vw,2rem);font-weight:800;color:#fff;line-height:1.25;margin-bottom:8px}
     .hero p{font-size:.95rem;color:rgba(255,255,255,.82);margin-bottom:26px}
 
-    /* ── SEARCH BOX ── */
-    .search-box{
-      background:var(--white);border:2px solid var(--border);border-radius:var(--r);
-      padding:20px;box-shadow:var(--sh-sm);max-width:720px;margin:0 auto;
-      display:flex;flex-direction:column;gap:14px;width:100%
-    }
+    .search-box{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh-sm);max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px;width:100%}
     .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
     @media(max-width:540px){.inputs-row{grid-template-columns:1fr}}
 
     .inp-group{display:flex;flex-direction:column;gap:4px;min-width:0;position:relative}
     .inp-group label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .inp-group input{
-      width:100%;border:1.5px solid var(--border-d);border-radius:var(--r-sm);
-      padding:10px 13px;font-size:.92rem;color:var(--text);background:var(--white);
-      outline:none;transition:border-color .18s
-    }
+    .inp-group input{width:100%;border:1.5px solid var(--border-d);border-radius:var(--r-sm);padding:10px 13px;font-size:.92rem;color:var(--text);background:var(--white);outline:none;transition:border-color .18s}
     .inp-group input:focus{border-color:var(--blue-hero)}
     .inp-group input::placeholder{color:var(--light)}
 
-    /* ── AUTOCOMPLETE ── */
-    .ac-list{
-      position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:200;
-      background:var(--white);border:1.5px solid var(--border-d);border-radius:var(--r-sm);
-      box-shadow:var(--sh-md);max-height:220px;overflow-y:auto;display:none
-    }
+    .ac-list{position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:200;background:var(--white);border:1.5px solid var(--border-d);border-radius:var(--r-sm);box-shadow:var(--sh-md);max-height:220px;overflow-y:auto;display:none}
     .ac-list.open{display:block}
     .ac-item{padding:9px 13px;font-size:.875rem;cursor:pointer;color:var(--text);transition:background .12s}
     .ac-item:hover,.ac-item.hi{background:var(--blue-mid)}
     .ac-item mark{background:none;color:var(--blue-hero);font-weight:700}
 
-    /* ── SECTOR BUTTONS ── */
     .sector-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-    .sec-btn{
-      padding:7px 16px;border:1.5px solid var(--border-d);border-radius:50px;
-      background:var(--white);color:var(--muted);font-size:.83rem;cursor:pointer;
-      transition:all .18s;white-space:nowrap
-    }
+    .sec-btn{padding:7px 16px;border:1.5px solid var(--border-d);border-radius:50px;background:var(--white);color:var(--muted);font-size:.83rem;cursor:pointer;transition:all .18s;white-space:nowrap}
     .sec-btn:hover{border-color:#000;color:#000}
     .sec-btn.active{background:#000;border-color:#000;color:#fff;font-weight:600}
 
-    /* ── STATS ── */
     .stats-bar{background:var(--blue-mid);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 20px}
     .stats-in{max-width:1080px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
     .stat strong{display:block;font-size:1.22rem;font-weight:800;color:#000}
     .stat span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 
-    /* ── LAYOUT ── */
     .layout{max-width:1080px;margin:22px auto 48px;padding:0 20px;display:grid;grid-template-columns:1fr 260px;gap:22px;align-items:start}
     @media(max-width:820px){.layout{grid-template-columns:1fr}}
 
-    /* ── RESULTS HEAD ── */
     .res-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
     .res-count{font-size:.875rem;color:var(--muted)}
     .res-count strong{color:#000}
 
-
-    /* ── CARDS ── */
     .cards{display:flex;flex-direction:column;gap:12px}
-    .card{
-      background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);
-      padding:18px 20px;box-shadow:var(--sh-xs);transition:box-shadow .18s,border-color .18s
-    }
+    .card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh-xs);transition:box-shadow .18s,border-color .18s}
     .card:hover{box-shadow:var(--sh-md);border-color:var(--border-d)}
     .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:4px}
     .card-name{font-size:1rem;font-weight:700;color:#000;line-height:1.3}
@@ -116,21 +86,11 @@
     .sect-lbl{font-size:.78rem;color:var(--muted)}
     .sect-lbl strong{color:#000}
     .card-actions{display:flex;gap:7px;flex-wrap:wrap}
-    .btn-tel{
-      display:inline-flex;align-items:center;gap:5px;
-      background:#000;color:#fff;border-radius:var(--r-sm);
-      padding:7px 13px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s
-    }
+    .btn-tel{display:inline-flex;align-items:center;gap:5px;background:#000;color:#fff;border-radius:var(--r-sm);padding:7px 13px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s}
     .btn-tel:hover{background:#222}
-    .btn-maps{
-      display:inline-flex;align-items:center;gap:5px;
-      background:var(--white);color:var(--blue-hero);border:1.5px solid var(--blue-hero);
-      border-radius:var(--r-sm);padding:7px 13px;font-size:.8rem;font-weight:600;
-      text-decoration:none;transition:all .18s
-    }
+    .btn-maps{display:inline-flex;align-items:center;gap:5px;background:var(--white);color:var(--blue-hero);border:1.5px solid var(--blue-hero);border-radius:var(--r-sm);padding:7px 13px;font-size:.8rem;font-weight:600;text-decoration:none;transition:all .18s}
     .btn-maps:hover{background:var(--blue-mid)}
 
-    /* ── PAGINATION ── */
     .pagination{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:22px;flex-wrap:wrap}
     .pg{min-width:36px;height:36px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--white);color:var(--text);font-size:.85rem;cursor:pointer;transition:all .18s}
     .pg:hover:not(:disabled){border-color:#000;color:#000}
@@ -138,27 +98,18 @@
     .pg:disabled{opacity:.35;cursor:not-allowed}
     .pg-dots{color:var(--light);font-size:.85rem;padding:0 3px}
 
-    /* ── SIDEBAR ── */
     .sidebar{display:flex;flex-direction:column;gap:18px;position:sticky;top:20px}
     .sb-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh-xs)}
     .sb-card h3{font-size:.86rem;font-weight:700;color:#000;margin-bottom:11px}
-    /* secteurs */
     .sect-list{list-style:none;display:flex;flex-direction:column;gap:9px}
     .sect-list li{font-size:.82rem;color:var(--muted);line-height:1.5}
     .sect-name{display:inline;font-weight:700;color:#000;margin-right:4px}
-    /* liens officiels */
     .links-list{list-style:none;display:flex;flex-direction:column;gap:2px}
-    .links-list a{
-      display:flex;align-items:center;justify-content:space-between;
-      font-size:.84rem;color:var(--muted);text-decoration:none;
-      padding:7px 10px;border-radius:var(--r-sm);
-      transition:background .15s,color .15s
-    }
+    .links-list a{display:flex;align-items:center;justify-content:space-between;font-size:.84rem;color:var(--muted);text-decoration:none;padding:7px 10px;border-radius:var(--r-sm);transition:background .15s,color .15s}
     .links-list a:hover{background:var(--blue-mid);color:#000}
     .links-list .ext{font-size:.75rem;color:var(--light);transition:color .15s}
     .links-list a:hover .ext{color:var(--blue-hero)}
 
-    /* ── STATE ── */
     .state{text-align:center;padding:52px 20px}
     .spin{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--blue-hero);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -166,21 +117,13 @@
     .state h3{font-size:1.05rem;color:#000;margin-bottom:5px}
     .state p{font-size:.875rem;color:var(--muted)}
 
-    /* ── FAQ ── */
     .faq-sec{background:var(--white);border-top:1px solid var(--border);padding:52px 20px}
     .faq-in{max-width:740px;margin:0 auto}
     .faq-in h2{font-size:clamp(1.1rem,2.6vw,1.45rem);font-weight:800;color:#000;text-align:center;margin-bottom:6px}
     .faq-sub{text-align:center;color:var(--muted);font-size:.86rem;margin-bottom:28px}
-    .faq-in details{
-      background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);
-      margin-bottom:8px;overflow:hidden
-    }
+    .faq-in details{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
     .faq-in details[open]{border-color:var(--border-d)}
-    .faq-in summary{
-      list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
-      padding:14px 18px;font-size:.92rem;font-weight:600;color:#000;cursor:pointer;
-      transition:background .16s;user-select:none
-    }
+    .faq-in summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;font-size:.92rem;font-weight:600;color:#000;cursor:pointer;transition:background .16s;user-select:none}
     .faq-in summary::-webkit-details-marker{display:none}
     .faq-in summary:hover{background:var(--bg)}
     .faq-in details[open] summary{background:var(--bg)}
@@ -191,7 +134,6 @@
     .faq-body ul{margin:7px 0 4px 18px}
     .faq-body ul li{margin-bottom:4px}
 
-    /* ── FOOTER ── */
     .site-footer{background:#000;color:rgba(255,255,255,.6);padding:26px 20px;text-align:center;font-size:.82rem}
     .site-footer a{color:rgba(255,255,255,.75);text-decoration:underline;transition:color .15s}
     .site-footer a:hover{color:#fff}
@@ -201,10 +143,9 @@
 </head>
 <body>
 
-<!-- ════ HEADER ════ -->
 <header>
   <div class="hdr">
-    <div class="logo">Médecins conventionnés</div>
+    <div class="logo">médecins-conventionnés.fr</div>
     <ul class="nav">
       <li><a href="#annuaire">Annuaire</a></li>
       <li><a href="#faq">FAQ</a></li>
@@ -213,32 +154,23 @@
   </div>
 </header>
 
-<!-- ════ HERO ════ -->
 <section class="hero" id="annuaire">
   <div class="hero-in">
-    <h1>Annuaire National des Médecins Conventionnés</h1>
+    <h1>Liste des Médecins Conventionnés</h1>
     <p>Trouvez un professionnel de santé et contrôlez vos frais médicaux</p>
 
     <div class="search-box">
       <div class="inputs-row">
-
-        <!-- Code postal -->
         <div class="inp-group">
           <label>📍 Code postal</label>
-          <input type="text" id="inpCp" placeholder="Ex : 75012, 77000…"
-                 autocomplete="off" maxlength="5" inputmode="numeric"/>
+          <input type="text" id="inpCp" placeholder="Ex : 75012, 77000…" autocomplete="off" maxlength="5" inputmode="numeric"/>
         </div>
-
-        <!-- Spécialité -->
         <div class="inp-group">
           <label>🩺 Spécialité</label>
           <input type="text" id="inpSp" placeholder="Ex : dentiste, cardio…" autocomplete="off"/>
           <div class="ac-list" id="acSp"></div>
         </div>
-
       </div>
-
-      <!-- Secteur -->
       <div class="sector-row" role="group" aria-label="Filtrer par secteur">
         <button class="sec-btn active" data-sec="all" onclick="setSector(this)">Tous secteurs</button>
         <button class="sec-btn"        data-sec="s1"  onclick="setSector(this)">Secteur 1</button>
@@ -249,7 +181,6 @@
   </div>
 </section>
 
-<!-- ════ STATS ════ -->
 <div class="stats-bar">
   <div class="stats-in">
     <div class="stat"><strong id="sTot">—</strong><span>médecins référencés</span></div>
@@ -258,13 +189,10 @@
   </div>
 </div>
 
-<!-- ════ MAIN ════ -->
 <main class="layout">
-
   <section aria-label="Résultats">
     <div class="res-head">
       <p class="res-count" id="resCount">Chargement…</p>
-
     </div>
     <div id="cardsWrap"></div>
     <nav id="paginWrap" aria-label="Pagination"></nav>
@@ -288,41 +216,28 @@
       </ul>
     </div>
   </aside>
-
 </main>
 
-<!-- ════ FAQ ════ -->
 <section class="faq-sec" id="faq">
   <div class="faq-in">
     <h2>Foire aux questions</h2>
     <p class="faq-sub">Tout ce que vous devez savoir sur les secteurs de conventionnement</p>
 
     <details itemscope itemtype="https://schema.org/Question">
-      <summary itemprop="name">
-        Quelle est la différence entre les secteurs 1, 2 et 3 ?
+      <summary itemprop="name">Quelle est la différence entre les secteurs 1, 2 et 3 ?
         <svg class="faq-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </summary>
       <div class="faq-body" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
         <ul>
-          <li>
-            <strong>Secteur 1 (Tarifs conventionnels) :</strong> Application stricte des tarifs de l'Assurance Maladie, sans dépassement d'honoraires.<br>
-            <em>Exemple : Consultation à 30 €. Remboursement intégral par la Sécurité Sociale et la mutuelle. Reste à charge : 0 € (hors participation de 2 €).</em>
-          </li>
-          <li style="margin-top:8px">
-            <strong>Secteur 2 (Honoraires libres) :</strong> Autorisation de pratiquer des dépassements d'honoraires encadrés.<br>
-            <em>Exemple : Consultation à 50 €. La Sécurité Sociale rembourse sur la base de 30 €. Le dépassement de 20 € est à la charge de la mutuelle.</em>
-          </li>
-          <li style="margin-top:8px">
-            <strong>Secteur 3 (Non conventionné) :</strong> Tarifs totalement libres, hors système de l'Assurance Maladie.<br>
-            <em>Exemple : Consultation à 90 €. La Sécurité Sociale ne rembourse que le tarif d'autorité de 0,61 €. Le reste est à la charge de l'assuré.</em>
-          </li>
+          <li><strong>Secteur 1 :</strong> Tarifs réglementés par l'Assurance Maladie. Aucun dépassement d'honoraires.</li>
+          <li><strong>Secteur 2 :</strong> Honoraires libres. Les dépassements sont autorisés mais encadrés.</li>
+          <li><strong>Secteur 3 :</strong> Professionnels non conventionnés. Tarifs totalement libres et remboursement minimal par la Sécurité Sociale.</li>
         </ul>
       </div>
     </details>
 
     <details itemscope itemtype="https://schema.org/Question">
-      <summary itemprop="name">
-        Qu'est-ce que l'OPTAM ?
+      <summary itemprop="name">Qu'est-ce que l'OPTAM ?
         <svg class="faq-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </summary>
       <div class="faq-body" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
@@ -331,8 +246,7 @@
     </details>
 
     <details itemscope itemtype="https://schema.org/Question">
-      <summary itemprop="name">
-        D'où proviennent les données de cet annuaire ?
+      <summary itemprop="name">D'où proviennent les données de cet annuaire ?
         <svg class="faq-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </summary>
       <div class="faq-body" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
@@ -341,37 +255,29 @@
     </details>
 
     <details itemscope itemtype="https://schema.org/Question">
-      <summary itemprop="name">
-        Mes recherches sont-elles confidentielles ?
+      <summary itemprop="name">Mes recherches sont-elles confidentielles ?
         <svg class="faq-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </summary>
       <div class="faq-body" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
         <p>Oui. Le site n'enregistre aucune donnée et n'utilise aucun serveur de stockage. Vos recherches par code postal ou spécialité sont traitées instantanément et localement sur votre propre navigateur, dans le respect total du <strong>RGPD</strong>.</p>
       </div>
     </details>
-
   </div>
 </section>
 
-<!-- ════ FOOTER ════ -->
 <footer class="site-footer">
-  <p>© 2026 medecins-conventionnes.fr — <a href="mentions-legales.html">Mentions légales</a> — <a href="confidentialite.html">Politique de confidentialité</a></p>
+  <p>© 2026 médecins-conventionnés.fr — <a href="mentions-legales.html">Mentions légales</a> — <a href="confidentialite.html">Politique de confidentialité</a></p>
   <p style="margin-top:10px;opacity:.55;font-size:.72rem;max-width:820px;margin-left:auto;margin-right:auto;line-height:1.6">
     Avertissement : Ce site est un outil d'aide à la recherche basé sur les données ouvertes de l'Assurance Maladie (data.gouv.fr). Ce site n'évalue, ne note et ne classe pas les professionnels de santé. Les liens « Avis / Itinéraire » redirigent l'utilisateur vers le moteur de recherche tiers Google Maps ; l'éditeur du site décline toute responsabilité quant aux contenus, avis ou notations présents sur cette plateforme externe.
   </p>
 </footer>
 
-<!-- ════ JAVASCRIPT ════ -->
 <script>
-/* ══ CONFIG ══ */
 const PG = 20;
-
-/* ══ STATE ══ */
 let all = [], filtered = [], pg = 1, sector = 'all';
 let filterCp = '', filterSpec = '';
 let acSpList = [];
 
-/* ══ DEMO DATA (removed once medecins.csv is present) ══ */
 const DEMO = [
   {nom:'MARTIN',  prenom:'Sophie',   spec:'Médecine générale',   tel:'01 42 36 78 90', voie:'12 rue de Rivoli',      cp:'75001', ville:'Paris',       raw:'Secteur 1'},
   {nom:'DUBOIS',  prenom:'Pierre',   spec:'Cardiologie',          tel:'04 72 41 22 10', voie:'5 avenue de la Paix',   cp:'69002', ville:'Lyon',         raw:'Secteur 1'},
@@ -395,9 +301,7 @@ const DEMO = [
   {nom:'ROBIN',   prenom:'Patrick',  spec:'Dermatologie',         tel:'04 67 58 12 30', voie:'28 av. du Peyrou',      cp:'34000', ville:'Montpellier',  raw:'Secteur 3'},
 ];
 
-/* ══ HELPERS ══ */
 function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
-
 function fixTel(raw) {
   if (!raw) return '';
   const d = raw.replace(/\D/g,'');
@@ -405,50 +309,32 @@ function fixTel(raw) {
   const fixed = (d.length === 9 || d[0] !== '0') ? '0'+d : d;
   return fixed.replace(/(\d{2})(?=\d)/g,'$1 ').trim();
 }
-
 function normSec(raw) {
   const s = String(raw||'').toLowerCase();
   if (s.includes('non conv') || s.includes('3')) return 's3';
   if (s.includes('2') || s.includes('optam'))    return 's2';
   return 's1';
 }
-
 function highlight(val, q) {
   const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
   return x(val).replace(re,'<mark>$1</mark>');
 }
-
 function mapsUrl(d) {
   const q = encodeURIComponent([d.spec,d.nom,d.prenom,d.voie,d.cp,d.ville].filter(Boolean).join(' '));
   return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
-/* ══ LOAD CSV (streaming via PapaParse pour 23 Mo) ══ */
 function loadData() {
   showLoading();
   let rows = [];
-
-  Papa.parse('./medecins.csv', {
-    download     : true,
-    header       : true,
-    skipEmptyLines: true,
-    trimHeaders  : true,
-    /* worker: true — décommentez si vous avez un fichier > 50 Mo */
+  Papa.parse('medecins.csv', {
+    download:true, header:true, skipEmptyLines:true, trimHeaders:true,
     chunk(results) {
       results.data.forEach(d => {
-        const nom    = String(d['nom']    ||'').trim().toUpperCase();
-        const prenom = String(d['prenom'] ||'').trim();
+        const nom = String(d['nom']||'').trim().toUpperCase();
+        const prenom = String(d['prenom']||'').trim();
         if (!nom && !prenom) return;
-        rows.push({
-          nom,
-          prenom,
-          spec : String(d['specialite']              ||'').trim(),
-          tel  : fixTel(String(d['coordonnees_num_tel']||'').trim()),
-          voie : String(d['coordonnees_voie']         ||'').trim(),
-          cp   : String(d['coordonnees_code_postal']  ||'').trim(),
-          ville: String(d['coordonnees_ville']        ||'').trim(),
-          raw  : String(d['secteur']                  ||'Secteur 1').trim(),
-        });
+        rows.push({nom,prenom,spec:String(d['specialite']||'').trim(),tel:fixTel(String(d['coordonnees_num_tel']||'').trim()),voie:String(d['coordonnees_voie']||'').trim(),cp:String(d['coordonnees_code_postal']||'').trim(),ville:String(d['coordonnees_ville']||'').trim(),raw:String(d['secteur']||'Secteur 1').trim()});
       });
     },
     complete() { init(rows.length ? rows : DEMO); },
@@ -456,62 +342,47 @@ function loadData() {
   });
 }
 
-/* ══ INIT ══ */
 function init(data) {
   all = data.map(d => ({ ...d, sk: normSec(d.raw) }));
-
   document.getElementById('sTot').textContent = all.length.toLocaleString('fr-FR');
   const depts = new Set(all.map(d => d.cp.slice(0,2)).filter(Boolean));
   const specs  = new Set(all.map(d => d.spec).filter(Boolean));
   document.getElementById('sDep').textContent = depts.size;
   document.getElementById('sSp').textContent  = specs.size;
-
   acSpList = [...specs].sort((a,b) => a.localeCompare(b,'fr'));
   initSpecAC();
   initCpFilter();
   applyFilters();
 }
 
-/* ══ CODE POSTAL FILTER ══ */
 function initCpFilter() {
   const inp = document.getElementById('inpCp');
   let timer;
   inp.addEventListener('input', () => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      filterCp = inp.value.trim();
-      pg = 1; applyFilters();
-    }, 300);
+    timer = setTimeout(() => { filterCp = inp.value.trim(); pg = 1; applyFilters(); }, 300);
   });
 }
 
-/* ══ SPECIALITY AUTOCOMPLETE ══ */
 function initSpecAC() {
   const inp = document.getElementById('inpSp');
   const box = document.getElementById('acSp');
-
   inp.addEventListener('input', () => {
     filterSpec = '';
     const q = inp.value.trim().toLowerCase();
     if (!q) { box.classList.remove('open'); applyFilters(); return; }
     const matches = acSpList.filter(s => s.toLowerCase().includes(q)).slice(0,10);
     if (!matches.length) { box.classList.remove('open'); return; }
-    box.innerHTML = matches.map((s,i) =>
-      `<div class="ac-item" data-i="${i}" data-val="${x(s)}">${highlight(s,q)}</div>`
-    ).join('');
+    box.innerHTML = matches.map((s,i) => `<div class="ac-item" data-i="${i}" data-val="${x(s)}">${highlight(s,q)}</div>`).join('');
     box.classList.add('open');
   });
-
   box.addEventListener('mousedown', e => {
     const el = e.target.closest('.ac-item');
     if (!el) return;
     e.preventDefault();
-    inp.value  = el.dataset.val;
-    filterSpec = el.dataset.val;
-    box.classList.remove('open');
-    pg = 1; applyFilters();
+    inp.value = el.dataset.val; filterSpec = el.dataset.val;
+    box.classList.remove('open'); pg = 1; applyFilters();
   });
-
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       const match = acSpList.find(s => s.toLowerCase() === inp.value.trim().toLowerCase());
@@ -519,86 +390,64 @@ function initSpecAC() {
       box.classList.remove('open');
     }
   });
-
   inp.addEventListener('blur', () => setTimeout(() => box.classList.remove('open'), 200));
 }
 
-/* ══ SECTOR ══ */
 function setSector(btn) {
   document.querySelectorAll('.sec-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  sector = btn.dataset.sec;
-  pg = 1; applyFilters();
+  sector = btn.dataset.sec; pg = 1; applyFilters();
 }
 
-/* ══ FILTER + SORT ══ */
 function applyFilters() {
   filtered = all.filter(d => {
     if (sector === 's1' && d.sk !== 's1') return false;
     if (sector === 's2' && d.sk !== 's2') return false;
     if (sector === 's3' && d.sk !== 's3') return false;
-    if (filterCp   && !d.cp.startsWith(filterCp))                          return false;
-    if (filterSpec && d.spec.toLowerCase() !== filterSpec.toLowerCase())   return false;
+    if (filterCp   && !d.cp.startsWith(filterCp)) return false;
+    if (filterSpec && d.spec.toLowerCase() !== filterSpec.toLowerCase()) return false;
     return true;
   });
-
   filtered.sort((a,b) => a.nom.localeCompare(b.nom,'fr'));
   pg = 1; render();
 }
 
-/* ══ ICONS ══ */
 const iPin   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 4.9-7 13-7 13S5 13.9 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>`;
 const iPhone = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 4.42 4.16 2 2 0 0 1 6.4 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L10.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
 
-/* ══ RENDER ══ */
 function render() {
-  const tot   = filtered.length;
+  const tot = filtered.length;
   const start = (pg-1)*PG;
   const slice = filtered.slice(start, start+PG);
-
-  document.getElementById('resCount').innerHTML =
-    `<strong>${tot.toLocaleString('fr-FR')}</strong> médecin${tot!==1?'s':''} trouvé${tot!==1?'s':''}`;
-
+  document.getElementById('resCount').innerHTML = `<strong>${tot.toLocaleString('fr-FR')}</strong> médecin${tot!==1?'s':''} trouvé${tot!==1?'s':''}`;
   const wrap = document.getElementById('cardsWrap');
   if (!tot) {
     wrap.innerHTML = `<div class="state"><div class="state-ico">🔍</div><h3>Aucun résultat</h3><p>Essayez un autre code postal, une autre spécialité ou un autre secteur.</p></div>`;
-    document.getElementById('paginWrap').innerHTML = '';
-    return;
+    document.getElementById('paginWrap').innerHTML = ''; return;
   }
-
   let h = '<div class="cards">';
   slice.forEach(d => {
     const telHtml = d.tel
       ? `<a class="btn-tel" href="tel:${d.tel.replace(/\s/g,'')}">${iPhone} ${x(d.tel)}</a>`
       : `<span style="font-size:.75rem;color:var(--light)">Tél. non renseigné</span>`;
-    h += `
-    <article class="card" itemscope itemtype="https://schema.org/Physician">
+    h += `<article class="card" itemscope itemtype="https://schema.org/Physician">
       <div class="card-head">
         <div class="card-name" itemprop="name">Dr ${x(d.nom)} ${x(d.prenom)}</div>
         <span class="card-tag">${x(d.raw)}</span>
       </div>
       <div class="card-spec" itemprop="medicalSpecialty">${x(d.spec)||'Spécialité non précisée'}</div>
-      <div class="card-meta">
-        <div class="mi">${iPin}
-          <span itemprop="address">${[d.voie,d.cp,d.ville].filter(Boolean).map(x).join(', ')}</span>
-        </div>
-      </div>
+      <div class="card-meta"><div class="mi">${iPin}<span itemprop="address">${[d.voie,d.cp,d.ville].filter(Boolean).map(x).join(', ')}</span></div></div>
       <div class="card-foot">
         <span class="sect-lbl">Conventionnement : <strong>${x(d.raw)}</strong></span>
-        <div class="card-actions">
-          ${telHtml}
-          <a class="btn-maps" href="${mapsUrl(d)}" target="_blank" rel="noopener">🗺️ Avis / Itinéraire</a>
-        </div>
+        <div class="card-actions">${telHtml}<a class="btn-maps" href="${mapsUrl(d)}" target="_blank" rel="noopener">🗺️ Avis / Itinéraire</a></div>
       </div>
     </article>`;
   });
   h += '</div>';
   wrap.innerHTML = h;
   renderPagin(tot);
-  document.getElementById('annuaire').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-/* ══ PAGINATION ══ */
 function renderPagin(tot) {
   const tp = Math.ceil(tot/PG);
   const el = document.getElementById('paginWrap');
@@ -624,17 +473,11 @@ function gp(n) {
   if (n<1||n>mx) return;
   pg=n; render();
 }
-
-
-
-/* ══ LOADING STATE ══ */
 function showLoading() {
-  document.getElementById('cardsWrap').innerHTML =
-    `<div class="state"><div class="spin"></div><h3>Chargement de l'annuaire…</h3><p>Lecture du fichier medecins.csv en cours (peut prendre quelques secondes).</p></div>`;
+  document.getElementById('cardsWrap').innerHTML = `<div class="state"><div class="spin"></div><h3>Chargement de l'annuaire…</h3><p>Lecture du fichier medecins.csv en cours.</p></div>`;
   document.getElementById('resCount').textContent = 'Chargement…';
 }
 
-/* ══ BOOT ══ */
 loadData();
 </script>
 </body>
